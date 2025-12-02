@@ -1,7 +1,7 @@
 use anyhow::Result;
 use tracing::{debug, info};
 
-use crate::single_line_from_file;
+use crate::{DDay, single_line_from_file};
 
 fn is_invalid_part1(number: u64) -> bool {
     let len: u32 = ((number as f32).log10() + 1.0).floor() as u32 / 2;
@@ -35,7 +35,7 @@ fn is_invalid_part2(number: u64) -> bool {
     let len: u32 = ((number as f32).log10() + 1.0).floor() as u32;
     for i in 1..((len / 2) + 1) {
         let mut failed = false;
-        if len % i != 0 {
+        if !len.is_multiple_of(i) {
             continue;
         }
 
@@ -47,7 +47,7 @@ fn is_invalid_part2(number: u64) -> bool {
                 failed = true;
                 break;
             }
-            tmp = tmp / (10_u64.pow(i));
+            tmp /= 10_u64.pow(i);
         }
 
         if !failed {
@@ -78,12 +78,21 @@ fn process_part2(input: String) -> u64 {
     invalid
 }
 
-pub fn run() -> Result<()> {
-    let res = process_part1(single_line_from_file("./input/day02.txt")?);
-    info!(?res, "1st part");
-    let res = process_part2(single_line_from_file("./input/day02.txt")?);
-    info!(?res, "2nd part");
-    Ok(())
+#[derive(Debug, Default)]
+pub struct Day02;
+
+impl DDay for Day02 {
+    fn run(&self) -> Result<()> {
+        let res = process_part1(single_line_from_file("./input/day02.txt")?);
+        info!(?res, "1st part");
+        let res = process_part2(single_line_from_file("./input/day02.txt")?);
+        info!(?res, "2nd part");
+        Ok(())
+    }
+
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Day02")
+    }
 }
 
 #[cfg(test)]
