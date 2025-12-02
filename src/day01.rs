@@ -1,3 +1,4 @@
+use anyhow::Result;
 use tracing::{debug, info};
 
 use crate::lines_from_file;
@@ -60,11 +61,12 @@ fn process2(input: Vec<String>) -> i32 {
     })
 }
 
-pub fn run() {
-    let res = process(lines_from_file("./input/day01.txt"));
+pub fn run() -> Result<()> {
+    let res = process(lines_from_file("./input/day01.txt")?);
     info!("1st part: {}", res);
-    let res = process2(lines_from_file("./input/day01.txt"));
+    let res = process2(lines_from_file("./input/day01.txt")?);
     info!("2nd part: {}", res);
+    Ok(())
 }
 
 #[cfg(test)]
