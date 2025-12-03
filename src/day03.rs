@@ -46,10 +46,6 @@ impl DDay for Day03 {
         info!("2nd part: {}", res);
         Ok(())
     }
-
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Day03")
-    }
 }
 
 #[cfg(test)]

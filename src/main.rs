@@ -13,14 +13,13 @@ struct Cli {
 
     #[clap(short, long)]
     /// Index of the day
-    day: u8,
+    day: Option<u8>,
 }
 
 fn main() -> Result<()> {
     let args = Cli::parse();
     setup_logging(&args.log_level)?;
-    adventofcode2025::run(args.day)?;
-    Ok(())
+    adventofcode2025::run(args.day.unwrap_or_default())
 }
 
 fn setup_logging(log_level: &str) -> Result<()> {

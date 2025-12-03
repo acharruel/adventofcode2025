@@ -1,13 +1,9 @@
 use std::{
-    fmt::Display,
-    fs::File,
-    io::{BufRead, BufReader, Lines},
-    path::Path,
+    fs::File, io::{BufRead, BufReader, Lines}, path::Path
 };
 
 use anyhow::Result;
 use strum::{EnumIter, FromRepr};
-use tracing::info;
 
 use crate::{day01::Day01, day02::Day02, day03::Day03};
 
@@ -17,16 +13,6 @@ mod day03;
 
 pub trait DDay {
     fn run(&self) -> Result<()>;
-    fn fmt(&self, _f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        Ok(())
-    }
-}
-
-impl Display for dyn DDay {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        println!("{:?}", self.fmt(f));
-        Ok(())
-    }
 }
 
 #[derive(Debug, EnumIter, FromRepr)]
@@ -42,10 +28,10 @@ impl DDay for Day {
     fn run(&self) -> Result<()> {
         match self {
             Day::Day00 => {
-                let all: Vec<&dyn DDay> = vec![&Day01, &Day02];
+                let all: Vec<&dyn DDay> = vec![&Day01, &Day02, &Day03];
                 all.iter().for_each(|day| {
-                    info!("Running {}", day);
                     day.run().expect("Failed to run all days");
+                    println!();
                 });
             }
             Day::Day01 => Day01.run()?,
