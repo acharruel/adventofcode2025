@@ -9,11 +9,12 @@ use strum::{EnumIter, FromRepr};
 use strum_macros::Display;
 use tracing::info;
 
-use crate::{day01::Day01, day02::Day02, day03::Day03};
+use crate::{day01::Day01, day02::Day02, day03::Day03, day04::Day04};
 
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 pub trait DDay {
     fn run(&self) -> Result<()>;
@@ -27,6 +28,7 @@ pub enum Day {
     Day01,
     Day02,
     Day03,
+    Day04,
 }
 
 impl DDay for Day {
@@ -43,6 +45,7 @@ impl DDay for Day {
             Day::Day01 => Day01.run()?,
             Day::Day02 => Day02.run()?,
             Day::Day03 => Day03.run()?,
+            Day::Day04 => Day04.run()?,
         }
         Ok(())
     }
