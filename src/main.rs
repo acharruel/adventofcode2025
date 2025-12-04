@@ -24,7 +24,7 @@ fn main() -> Result<()> {
 
 fn setup_logging(log_level: &str) -> Result<()> {
     let filter = EnvFilter::builder()
-        .with_default_directive(LevelFilter::OFF.into())
+        .with_default_directive(LevelFilter::DEBUG.into())
         .from_env()?
         .add_directive(log_level.parse()?);
     let layer = tracing_subscriber::fmt::layer().without_time();

@@ -78,7 +78,7 @@ impl DDay for Day01 {
 mod tests {
     use crate::day01::*;
 
-    #[test]
+    #[test_log::test]
     fn test1() {
         let input = vec![
             "L68".to_string(),
@@ -95,7 +95,7 @@ mod tests {
         assert!(process(input) == 3);
     }
 
-    #[test]
+    #[test_log::test]
     fn test2() {
         let input = vec![
             "L68".to_string(),

@@ -1,9 +1,13 @@
 use std::{
-    fs::File, io::{BufRead, BufReader, Lines}, path::Path
+    fs::File,
+    io::{BufRead, BufReader, Lines},
+    path::Path,
 };
 
 use anyhow::Result;
 use strum::{EnumIter, FromRepr};
+use strum_macros::Display;
+use tracing::info;
 
 use crate::{day01::Day01, day02::Day02, day03::Day03};
 
@@ -15,9 +19,10 @@ pub trait DDay {
     fn run(&self) -> Result<()>;
 }
 
-#[derive(Debug, EnumIter, FromRepr)]
+#[derive(Debug, Display, EnumIter, FromRepr)]
 #[repr(u8)]
 pub enum Day {
+    #[strum(to_string = "all days")]
     Day00,
     Day01,
     Day02,
@@ -26,6 +31,7 @@ pub enum Day {
 
 impl DDay for Day {
     fn run(&self) -> Result<()> {
+        info!("Running {}:", self);
         match self {
             Day::Day00 => {
                 let all: Vec<&dyn DDay> = vec![&Day01, &Day02, &Day03];
@@ -51,7 +57,7 @@ pub fn run(day: u8) -> Result<()> {
 
 pub fn lines_from_file(filename: impl AsRef<Path>) -> Result<Vec<String>> {
     Ok(read_lines(filename)?
-        .map(|l| l.expect("Could not parse line"))
+        .map(|l| l.expect("Failed to parse line"))
         .collect())
 }
 
