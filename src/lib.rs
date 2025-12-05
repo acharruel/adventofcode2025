@@ -1,7 +1,7 @@
 use std::{
     fs::File,
     io::{BufRead, BufReader, Lines},
-    path::Path,
+    path::Path, time::SystemTime,
 };
 
 use anyhow::Result;
@@ -36,6 +36,7 @@ pub enum Day {
 impl DDay for Day {
     fn run(&self) -> Result<()> {
         info!("Running {}:", self);
+        let start = SystemTime::now();
         match self {
             Day::Day00 => {
                 let all: Vec<&dyn DDay> = vec![&Day01, &Day02, &Day03, &Day04, &Day05];
@@ -50,6 +51,7 @@ impl DDay for Day {
             Day::Day04 => Day04.run()?,
             Day::Day05 => Day05.run()?,
         }
+        info!("took {} us", start.elapsed().unwrap().as_micros());
         Ok(())
     }
 }
