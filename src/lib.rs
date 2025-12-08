@@ -1,7 +1,8 @@
 use std::{
     fs::File,
     io::{BufRead, BufReader, Lines},
-    path::Path, time::SystemTime,
+    path::Path,
+    time::SystemTime,
 };
 
 use anyhow::Result;
@@ -9,13 +10,18 @@ use strum::{EnumIter, FromRepr};
 use strum_macros::Display;
 use tracing::info;
 
-use crate::{day01::Day01, day02::Day02, day03::Day03, day04::Day04, day05::Day05};
-
 mod day01;
 mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
+mod day07;
+
+use crate::{
+    day01::Day01, day02::Day02, day03::Day03, day04::Day04, day05::Day05, day06::Day06,
+    day07::Day07,
+};
 
 pub trait DDay {
     fn run(&self) -> Result<()>;
@@ -31,6 +37,8 @@ pub enum Day {
     Day03,
     Day04,
     Day05,
+    Day06,
+    Day07,
 }
 
 impl DDay for Day {
@@ -39,7 +47,8 @@ impl DDay for Day {
         let start = SystemTime::now();
         match self {
             Day::Day00 => {
-                let all: Vec<&dyn DDay> = vec![&Day01, &Day02, &Day03, &Day04, &Day05];
+                let all: Vec<&dyn DDay> =
+                    vec![&Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07];
                 all.iter().for_each(|day| {
                     day.run().expect("Failed to run all days");
                     println!();
@@ -50,6 +59,8 @@ impl DDay for Day {
             Day::Day03 => Day03.run()?,
             Day::Day04 => Day04.run()?,
             Day::Day05 => Day05.run()?,
+            Day::Day06 => Day06.run()?,
+            Day::Day07 => Day07.run()?,
         }
         info!("took {} us", start.elapsed().unwrap().as_micros());
         Ok(())
