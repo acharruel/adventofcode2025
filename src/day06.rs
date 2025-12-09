@@ -6,7 +6,7 @@ use crate::{DDay, lines_from_file};
 #[derive(Debug, Default)]
 pub struct Day06;
 
-fn process(input: &mut Vec<String>) -> u64 {
+fn process(input: &mut [String]) -> u64 {
     let mut totals: Vec<u64> = vec![];
     let mut it = input.iter().rev();
     let operations: Vec<_> = it.next().unwrap().split_whitespace().collect();
@@ -26,18 +26,16 @@ fn process(input: &mut Vec<String>) -> u64 {
             .map(|s| s.parse::<u64>().unwrap())
             .collect();
 
-        let mut pos = 0;
-        for (operand, operator) in numbers.iter().zip(operations.iter()) {
+        for (pos, (operand, operator)) in numbers.iter().zip(operations.iter()).enumerate() {
             totals[pos] = match *operator {
                 "+" => totals[pos] + operand,
                 "*" => totals[pos] * operand,
                 &_ => panic!(),
             };
-            pos += 1;
         }
     }
 
-    totals.iter().fold(0, |acc, n| acc + n)
+    totals.iter().sum::<u64>()
 }
 
 #[derive(Debug)]
@@ -48,7 +46,7 @@ struct Op<'a> {
     column: Vec<&'a str>,
 }
 
-fn process2(input: &mut Vec<String>) -> u64 {
+fn process2(input: &mut [String]) -> u64 {
     let mut operations: Vec<Op> = vec![];
     let mut size = 0;
     let mut total = 0;
@@ -61,7 +59,7 @@ fn process2(input: &mut Vec<String>) -> u64 {
                 }
                 operations.push(Op {
                     operation: c,
-                    size: size,
+                    size,
                     total: 0,
                     column: vec![],
                 });
@@ -73,7 +71,7 @@ fn process2(input: &mut Vec<String>) -> u64 {
                 }
                 operations.push(Op {
                     operation: c,
-                    size: size,
+                    size,
                     total: 1,
                     column: vec![],
                 });
@@ -101,7 +99,7 @@ fn process2(input: &mut Vec<String>) -> u64 {
             let mut power = 0;
             let n: u64 = op.column.iter().rev().fold(0, |mut acc, x| {
                 if let Some(x) = x.chars().nth(i).unwrap().to_digit(10) {
-                    acc = acc + (x * 10_u32.pow(power)) as u64;
+                    acc += (x * 10_u32.pow(power)) as u64;
                     power += 1;
                 }
                 acc

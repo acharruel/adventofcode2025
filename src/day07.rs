@@ -2,14 +2,13 @@ use std::collections::{BTreeSet, HashMap};
 
 use anyhow::Result;
 use tracing::{debug, info};
-use tracing_subscriber::field::debug;
 
 use crate::{DDay, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day07;
 
-fn process(input: &mut Vec<String>) -> i32 {
+fn process(input: &mut [String]) -> i32 {
     let mut positions: BTreeSet<usize> = BTreeSet::new();
     let mut it = input.iter();
     let mut total = 0;
@@ -49,7 +48,7 @@ fn recurse(
 
     debug!(?pos, ?depth);
 
-    let line = match input.iter().nth(depth) {
+    let line = match input.get(depth) {
         Some(l) => l,
         None => {
             debug!(?depth, ?pos, "END OF TIMELINE");
@@ -64,13 +63,13 @@ fn recurse(
     }
 
     if line.chars().nth(pos).unwrap() == '^' {
-        n += recurse(&input, pos - 1, depth + 2, hash);
-        n += recurse(&input, pos + 1, depth + 2, hash);
+        n += recurse(input, pos - 1, depth + 2, hash);
+        n += recurse(input, pos + 1, depth + 2, hash);
 
         debug!(?depth, ?pos, ?n, "node complete, insert hash");
         hash.insert((pos, depth), n);
     } else {
-        n += recurse(&input, pos, depth + 2, hash);
+        n += recurse(input, pos, depth + 2, hash);
     }
 
     n

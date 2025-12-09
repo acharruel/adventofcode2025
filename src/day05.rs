@@ -33,11 +33,11 @@ fn fill_fresh_intervals(set: &mut BTreeSet<Interval>, lower: u64, upper: u64) {
     if let Some(entry) = entry_containg_lower {
         set.insert(Interval {
             lower: entry.lower,
-            upper: upper,
+            upper,
         });
     } else if let Some(entry) = entry_containg_upper {
         set.insert(Interval {
-            lower: lower,
+            lower,
             upper: entry.upper,
         });
     } else {
