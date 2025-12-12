@@ -17,10 +17,11 @@ mod day04;
 mod day05;
 mod day06;
 mod day07;
+mod day08;
 
 use crate::{
     day01::Day01, day02::Day02, day03::Day03, day04::Day04, day05::Day05, day06::Day06,
-    day07::Day07,
+    day07::Day07, day08::Day08,
 };
 
 pub trait DDay {
@@ -39,6 +40,7 @@ pub enum Day {
     Day05,
     Day06,
     Day07,
+    Day08,
 }
 
 impl DDay for Day {
@@ -48,7 +50,7 @@ impl DDay for Day {
         match self {
             Day::Day00 => {
                 let all: Vec<&dyn DDay> =
-                    vec![&Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07];
+                    vec![&Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07, &Day08];
                 all.iter().for_each(|day| {
                     day.run().expect("Failed to run all days");
                     println!();
@@ -61,6 +63,7 @@ impl DDay for Day {
             Day::Day05 => Day05.run()?,
             Day::Day06 => Day06.run()?,
             Day::Day07 => Day07.run()?,
+            Day::Day08 => Day08.run()?,
         }
         info!("took {} us", start.elapsed().unwrap().as_micros());
         Ok(())
