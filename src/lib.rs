@@ -10,7 +10,6 @@ use strum::{EnumIter, FromRepr};
 use strum_macros::Display;
 use tracing::info;
 
-mod utils;
 mod day01;
 mod day02;
 mod day03;
@@ -19,10 +18,12 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
+mod day09;
+mod utils;
 
 use crate::{
     day01::Day01, day02::Day02, day03::Day03, day04::Day04, day05::Day05, day06::Day06,
-    day07::Day07, day08::Day08,
+    day07::Day07, day08::Day08, day09::Day09,
 };
 
 pub trait DDay {
@@ -42,6 +43,7 @@ pub enum Day {
     Day06,
     Day07,
     Day08,
+    Day09,
 }
 
 impl DDay for Day {
@@ -50,8 +52,9 @@ impl DDay for Day {
         let start = SystemTime::now();
         match self {
             Day::Day00 => {
-                let all: Vec<&dyn DDay> =
-                    vec![&Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07, &Day08];
+                let all: Vec<&dyn DDay> = vec![
+                    &Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07, &Day08, &Day09,
+                ];
                 all.iter().for_each(|day| {
                     day.run().expect("Failed to run all days");
                     println!();
@@ -65,6 +68,7 @@ impl DDay for Day {
             Day::Day06 => Day06.run()?,
             Day::Day07 => Day07.run()?,
             Day::Day08 => Day08.run()?,
+            Day::Day09 => Day09.run()?,
         }
         info!("took {} us", start.elapsed().unwrap().as_micros());
         Ok(())
