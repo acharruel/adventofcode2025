@@ -10,6 +10,7 @@ use strum::{EnumIter, FromRepr};
 use strum_macros::Display;
 use tracing::info;
 
+mod utils;
 mod day01;
 mod day02;
 mod day03;

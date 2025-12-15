@@ -1,8 +1,7 @@
-use std::collections::HashMap;
-
 use anyhow::Result;
 use tracing::{debug, info};
 
+use crate::utils::dsu::Dsu;
 use crate::{DDay, lines_from_file};
 
 #[derive(Debug, Default)]
@@ -22,17 +21,12 @@ impl JunctionBox {
             + (self.y - other.y) * (self.y - other.y)
             + (self.z - other.z) * (self.z - other.z)
     }
-
-    fn set_circuit_nb(&mut self, circuit: i32) {
-        self.circuit = circuit;
-    }
 }
 
 fn process(input: &mut [String], mut connections: i32) -> i32 {
     let mut list = vec![];
     let mut sorted_dist: Vec<(i64, i32, i32)> = vec![];
     let mut circuit_nb = 0;
-    let mut circuits: HashMap<i32, Vec<i32>> = HashMap::new();
 
     input.iter().for_each(|line| {
         let mut it = line.split(',');
@@ -45,7 +39,6 @@ fn process(input: &mut [String], mut connections: i32) -> i32 {
             z,
             circuit: circuit_nb,
         });
-        circuits.insert(circuit_nb, vec![circuit_nb]);
         circuit_nb += 1;
     });
 
@@ -59,47 +52,27 @@ fn process(input: &mut [String], mut connections: i32) -> i32 {
     }
     sorted_dist.sort_by_key(|(d, _, _)| *d);
 
+    let mut dsu = Dsu::new(input.len());
     let mut it = sorted_dist.iter();
     while connections > 0 {
         connections -= 1;
         let (_, jb1, jb2) = it.next().unwrap();
         debug!("Connecting a={}<->b={}", jb1, jb2);
-
         let c1 = list.get_mut(*jb1 as usize).unwrap().circuit;
         let c2 = list.get_mut(*jb2 as usize).unwrap().circuit;
-
-        if c1 == c2 {
-            continue;
-        }
-
-        debug!("Merging");
-        let src = circuits.get(&c2).unwrap();
-        let src = src.clone();
-        let dest = circuits.get_mut(&c1).unwrap();
-        for value in src {
-            dest.push(value);
-            let junction_box = list.get_mut(value as usize).unwrap();
-            junction_box.set_circuit_nb(c1);
-        }
-        circuits.remove(&c2);
+        dsu.union(c1, c2);
     }
 
-    debug!(?circuits);
-
-    let mut circuits_sizes: Vec<i32> = vec![];
-    for c in circuits.into_values() {
-        circuits_sizes.push(c.len() as i32);
-    }
-    circuits_sizes.sort();
-    circuits_sizes.reverse();
-    circuits_sizes.iter().take(3).product()
+    let mut sizes = dsu.get_sizes().clone();
+    sizes.sort();
+    sizes.reverse();
+    sizes.iter().take(3).fold(1, |acc, x| acc * *x as i32)
 }
 
 fn process2(input: &mut [String]) -> i64 {
     let mut list = vec![];
     let mut sorted_dist: Vec<(i64, i32, i32)> = vec![];
     let mut circuit_nb = 0;
-    let mut circuits: HashMap<i32, Vec<i32>> = HashMap::new();
 
     input.iter().for_each(|line| {
         let mut it = line.split(',');
@@ -112,7 +85,6 @@ fn process2(input: &mut [String]) -> i64 {
             z,
             circuit: circuit_nb,
         });
-        circuits.insert(circuit_nb, vec![circuit_nb]);
         circuit_nb += 1;
     });
 
@@ -126,29 +98,14 @@ fn process2(input: &mut [String]) -> i64 {
     }
     sorted_dist.sort_by_key(|(d, _, _)| *d);
 
+    let mut dsu = Dsu::new(input.len());
     let mut it = sorted_dist.iter();
     let mut res = 0;
-    while circuits.len() > 1 {
+    while dsu.component_sizes().len() > 1 {
         let (_, jb1, jb2) = it.next().unwrap();
-
         let c1 = list.get_mut(*jb1 as usize).unwrap().circuit;
         let c2 = list.get_mut(*jb2 as usize).unwrap().circuit;
-
-        if c1 == c2 {
-            continue;
-        }
-
-        debug!("Merging");
-        let src = circuits.get(&c2).unwrap();
-        let src = src.clone();
-        let dest = circuits.get_mut(&c1).unwrap();
-        for value in src {
-            dest.push(value);
-            let junction_box = list.get_mut(value as usize).unwrap();
-            junction_box.set_circuit_nb(c1);
-        }
-        circuits.remove(&c2);
-
+        dsu.union(c1, c2);
         res = list.get(*jb1 as usize).unwrap().x;
         res *= list.get(*jb2 as usize).unwrap().x;
     }
