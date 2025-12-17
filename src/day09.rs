@@ -23,7 +23,7 @@ fn process(input: &mut [String]) -> i64 {
     let mut areas: Vec<i64> = input
         .iter()
         .map(|l| Point {
-            x: l.split(',').nth(0).unwrap().parse::<i64>().unwrap(),
+            x: l.split(',').next().unwrap().parse::<i64>().unwrap(),
             y: l.split(',').nth(1).unwrap().parse::<i64>().unwrap(),
         })
         .tuple_combinations()
@@ -32,14 +32,14 @@ fn process(input: &mut [String]) -> i64 {
 
     areas.sort();
     debug!(?areas);
-    *areas.iter().rev().next().unwrap()
+    *areas.iter().next_back().unwrap()
 }
 
 fn process2(input: &mut Vec<String>) -> i64 {
     let mut rectangles: Vec<(Point, Point)> = input
         .iter()
         .map(|l| Point {
-            x: l.split(',').nth(0).unwrap().parse::<i64>().unwrap(),
+            x: l.split(',').next().unwrap().parse::<i64>().unwrap(),
             y: l.split(',').nth(1).unwrap().parse::<i64>().unwrap(),
         })
         .tuple_combinations()
@@ -54,11 +54,11 @@ fn process2(input: &mut Vec<String>) -> i64 {
         let mut bad = false;
         for (a, b) in input.iter().tuple_windows() {
             let a = Point {
-                x: a.split(',').nth(0).unwrap().parse::<i64>().unwrap(),
+                x: a.split(',').next().unwrap().parse::<i64>().unwrap(),
                 y: a.split(',').nth(1).unwrap().parse::<i64>().unwrap(),
             };
             let b = Point {
-                x: b.split(',').nth(0).unwrap().parse::<i64>().unwrap(),
+                x: b.split(',').next().unwrap().parse::<i64>().unwrap(),
                 y: b.split(',').nth(1).unwrap().parse::<i64>().unwrap(),
             };
             // debug!(?a, ?b);

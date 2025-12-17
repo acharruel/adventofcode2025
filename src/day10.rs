@@ -1,7 +1,7 @@
 use std::{collections::VecDeque, fmt::Display};
 
 use anyhow::Result;
-use tracing::{debug, info};
+use tracing::info;
 
 use crate::{DDay, lines_from_file};
 
@@ -92,7 +92,7 @@ fn process(input: &mut [String]) -> i32 {
         })
         .collect();
 
-    machines.iter().fold(0, |acc, n| acc + bfs(&n))
+    machines.iter().fold(0, |acc, n| acc + bfs(n))
 }
 
 impl DDay for Day10 {
