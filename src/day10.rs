@@ -1,7 +1,11 @@
-use std::{collections::VecDeque, fmt::Display};
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, VecDeque},
+    fmt::Display,
+};
 
 use anyhow::Result;
-use tracing::info;
+use tracing::{debug, info};
 
 use crate::{DDay, lines_from_file};
 
@@ -25,26 +29,42 @@ impl Display for Machine {
     }
 }
 
-fn bfs(machine: &Machine) -> i32 {
-    let mut queue: VecDeque<(u16, i32)> = VecDeque::new();
+// return the path to achieve final state
+// each path element represent switches bitfield
+fn backtrace(parents: HashMap<u16, (u16, u16)>, end: u16) -> Vec<u16> {
+    let mut path: Vec<(u16, u16)> = vec![(end, 0)];
+    while path[path.len() - 1].0 != 0 {
+        path.push(parents[&path[path.len() - 1].0]);
+    }
+    path.reverse();
+    path.iter().map(|p| p.1).collect()
+}
+
+fn part1_bfs(machine: &Machine) -> i32 {
+    let mut queue: VecDeque<u16> = VecDeque::new();
     let mut visited: Vec<u16> = vec![];
+    // backtrack state + switch (ie. transition)
+    let mut parents: HashMap<u16, (u16, u16)> = HashMap::new();
 
     // initial state = 0
-    queue.push_back((0, 0));
+    queue.push_back(0);
     visited.push(0);
 
     while !queue.is_empty() {
         // pop front to traverse the tree horizontally
-        if let Some((state, dist)) = queue.pop_front() {
+        if let Some(state) = queue.pop_front() {
             if state == machine.target {
-                return dist;
+                let path = backtrace(parents, state);
+                debug!(?path);
+                return path.len() as i32 - 1;
             }
 
             for sw in &machine.switches {
                 let next_state = state ^ sw;
                 if !visited.contains(&next_state) {
                     visited.push(next_state);
-                    queue.push_back((next_state, dist + 1));
+                    queue.push_back(next_state);
+                    parents.insert(next_state, (state, *sw));
                 }
             }
         }
@@ -92,13 +112,65 @@ fn process(input: &mut [String]) -> i32 {
         })
         .collect();
 
-    machines.iter().fold(0, |acc, n| acc + bfs(n))
+    machines.iter().fold(0, |acc, n| acc + part1_bfs(n))
+}
+
+#[derive(Debug, Default)]
+struct Machine2 {
+    switches: Vec<Vec<i32>>,
+    joltages: Vec<i32>,
+}
+
+fn process2(input: &mut [String]) -> i32 {
+    let machines: Vec<Machine2> = input
+        .iter()
+        .map(|l| {
+            let mut target_len = 0;
+            let mut switches = vec![];
+            let mut joltages = vec![];
+
+            for s in l.split_whitespace() {
+                match s.chars().next().unwrap() {
+                    '[' => {
+                        target_len = s.len() - 2;
+                    }
+                    '(' => {
+                        let mut sw = vec![0; target_len];
+                        s.trim_matches('(')
+                            .trim_matches(')')
+                            .split(',')
+                            .for_each(|n| {
+                                let n: usize = n.parse().unwrap();
+                                sw[n] = 1;
+                            });
+                        switches.push(sw);
+                    }
+                    '{' => s
+                        .trim_matches('{')
+                        .trim_matches('}')
+                        .split(',')
+                        .for_each(|n| {
+                            joltages.push(n.parse().unwrap());
+                        }),
+                    _ => panic!(),
+                }
+            }
+
+            Machine2 { switches, joltages }
+        })
+        .collect();
+
+    debug!(?machines);
+
+    0
 }
 
 impl DDay for Day10 {
     fn run(&self) -> Result<()> {
         let res = process(&mut lines_from_file("./input/day10.txt")?);
         info!("1st part: {}", res);
+        let res = process2(&mut lines_from_file("./input/day10.txt")?);
+        info!("2nd part: {}", res);
         Ok(())
     }
 }
@@ -116,4 +188,14 @@ mod tests {
         ];
         assert!(process(&mut input) == 7);
     }
+
+    // #[test_log::test]
+    // fn test2() {
+    //     let mut input = vec![
+    //         "[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}".to_string(),
+    //         "[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}".to_string(),
+    //         "[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}".to_string(),
+    //     ];
+    //     assert!(process2(&mut input) == 7);
+    // }
 }
