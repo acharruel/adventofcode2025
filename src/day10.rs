@@ -126,9 +126,9 @@ fn configure_joltages(machine: &mut Machine, joltages: Vec<i32>) -> Option<i32> 
         // Apply presses to find new target joltages
         let mut new_joltages = joltages.clone();
         for p in presses {
-            for idx in 0..new_joltages.len() {
+            for (idx, item) in new_joltages.iter_mut().enumerate() {
                 if p & (1 << idx) != 0 {
-                    new_joltages[idx] -= 1;
+                    *item -= 1;
                 }
             }
         }
