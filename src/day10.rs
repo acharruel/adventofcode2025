@@ -2,9 +2,9 @@ use std::{collections::HashMap, fmt::Display};
 
 use anyhow::Result;
 use itertools::Itertools;
-use tracing::{debug, info};
+use tracing::debug;
 
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day10;
@@ -162,13 +162,14 @@ fn process2(input: &mut [String]) -> i32 {
     })
 }
 
-impl DDay for Day10 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day10 {
+    fn run1(&self) -> Result<i64> {
         let res = process(&mut lines_from_file("./input/day10.txt")?);
-        info!("1st part: {}", res);
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process2(&mut lines_from_file("./input/day10.txt")?);
-        info!("2nd part: {}", res);
-        Ok(())
+        Ok(res as i64)
     }
 }
 

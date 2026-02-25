@@ -1,8 +1,8 @@
 use anyhow::Result;
 use itertools::Itertools;
-use tracing::{debug, info};
+use tracing::debug;
 
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day04;
@@ -96,13 +96,14 @@ fn iteration(input: &[String]) -> Vec<Position> {
     valid_positions
 }
 
-impl DDay for Day04 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day04 {
+    fn run1(&self) -> Result<i64> {
         let res = iteration(&lines_from_file("./input/day04.txt")?).len();
-        info!("1st part: {}", res);
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process(lines_from_file("./input/day04.txt")?);
-        info!("2nd part: {}", res);
-        Ok(())
+        Ok(res as i64)
     }
 }
 

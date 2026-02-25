@@ -2,13 +2,13 @@ use std::{
     fs::File,
     io::{BufRead, BufReader, Lines},
     path::Path,
-    time::SystemTime,
+    time,
 };
 
 use anyhow::Result;
-use strum::{EnumIter, FromRepr};
+use nanospinner::Spinner;
+use strum::{EnumIter, FromRepr, IntoEnumIterator};
 use strum_macros::Display;
-use tracing::info;
 
 mod day01;
 mod day02;
@@ -24,13 +24,32 @@ mod day11;
 mod day12;
 mod utils;
 
-use crate::{
-    day01::Day01, day02::Day02, day03::Day03, day04::Day04, day05::Day05, day06::Day06,
-    day07::Day07, day08::Day08, day09::Day09, day10::Day10, day11::Day11, day12::Day12
-};
-
-pub trait DDay {
-    fn run(&self) -> Result<()>;
+pub trait AocRun {
+    fn run(&self, name: &str) -> Result<()> {
+        println!("{name}:");
+        let spinner = Spinner::new(" Running part 1").start();
+        let start = time::Instant::now();
+        match self.run1() {
+            Ok(res) => spinner.success_with(format!(
+                " Part 1: {} in {:.2} us",
+                res,
+                start.elapsed().as_micros()
+            )),
+            Err(_) => spinner.fail(),
+        }
+        let spinner = Spinner::new(" Running part 2").start();
+        match self.run2() {
+            Ok(res) => spinner.success_with(format!(
+                " Part 2: {} in {:.2} us",
+                res,
+                start.elapsed().as_micros()
+            )),
+            Err(e) => spinner.fail_with(format!(" {}", e)),
+        }
+        Ok(())
+    }
+    fn run1(&self) -> Result<i64>;
+    fn run2(&self) -> Result<i64>;
 }
 
 #[derive(Debug, Display, EnumIter, FromRepr)]
@@ -52,42 +71,56 @@ pub enum Day {
     Day12,
 }
 
-impl DDay for Day {
-    fn run(&self) -> Result<()> {
-        info!("Running {}:", self);
-        let start = SystemTime::now();
-        match self {
-            Day::Day00 => {
-                let all: Vec<&dyn DDay> = vec![
-                    &Day01, &Day02, &Day03, &Day04, &Day05, &Day06, &Day07, &Day08, &Day09, &Day10,
-                    &Day11, &Day12
-                ];
-                all.iter().for_each(|day| {
-                    day.run().expect("Failed to run all days");
-                    println!();
-                });
-            }
-            Day::Day01 => Day01.run()?,
-            Day::Day02 => Day02.run()?,
-            Day::Day03 => Day03.run()?,
-            Day::Day04 => Day04.run()?,
-            Day::Day05 => Day05.run()?,
-            Day::Day06 => Day06.run()?,
-            Day::Day07 => Day07.run()?,
-            Day::Day08 => Day08.run()?,
-            Day::Day09 => Day09.run()?,
-            Day::Day10 => Day10.run()?,
-            Day::Day11 => Day11.run()?,
-            Day::Day12 => Day12.run()?,
+impl From<Day> for Box<dyn AocRun> {
+    fn from(value: Day) -> Self {
+        match value {
+            Day::Day00 => Box::new(Day00),
+            Day::Day01 => Box::new(day01::Day01),
+            Day::Day02 => Box::new(day02::Day02),
+            Day::Day03 => Box::new(day03::Day03),
+            Day::Day04 => Box::new(day04::Day04),
+            Day::Day05 => Box::new(day05::Day05),
+            Day::Day06 => Box::new(day06::Day06),
+            Day::Day07 => Box::new(day07::Day07),
+            Day::Day08 => Box::new(day08::Day08),
+            Day::Day09 => Box::new(day09::Day09),
+            Day::Day10 => Box::new(day10::Day10),
+            Day::Day11 => Box::new(day11::Day11),
+            Day::Day12 => Box::new(day12::Day12),
         }
-        info!("took {} us", start.elapsed().unwrap().as_micros());
+    }
+}
+
+struct Day00;
+
+impl AocRun for Day00 {
+    fn run(&self, _name: &str) -> Result<()> {
+        for day in Day::iter() {
+            match day {
+                Day::Day00 => (),
+                _ => {
+                    let name = &day.to_string();
+                    let module: Box<dyn AocRun> = day.into();
+                    module.run(name)?;
+                }
+            }
+        }
         Ok(())
+    }
+    fn run1(&self) -> Result<i64> {
+        Ok(0)
+    }
+    fn run2(&self) -> Result<i64> {
+        Ok(0)
     }
 }
 
 pub fn run(day: u8) -> Result<()> {
     if let Some(day) = Day::from_repr(day) {
-        day.run()?;
+        let name = &day.to_string();
+        println!("Running {}", name);
+        let module: Box<dyn AocRun> = day.into();
+        module.run(name)?;
     };
     Ok(())
 }

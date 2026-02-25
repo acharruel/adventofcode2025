@@ -1,8 +1,8 @@
 use anyhow::Result;
-use tracing::{debug, info};
+use tracing::debug;
 
 use crate::utils::dsu::Dsu;
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day08;
@@ -113,13 +113,14 @@ fn process2(input: &mut [String]) -> i64 {
     res
 }
 
-impl DDay for Day08 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day08 {
+    fn run1(&self) -> Result<i64> {
         let res = process(&mut lines_from_file("./input/day08.txt")?, 1000);
-        info!("1st part: {}", res);
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process2(&mut lines_from_file("./input/day08.txt")?);
-        info!("2nd part: {}", res);
-        Ok(())
+        Ok(res)
     }
 }
 

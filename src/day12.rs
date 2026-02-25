@@ -1,10 +1,9 @@
 use std::vec;
 
-use anyhow::Result;
+use anyhow::{Result, bail};
 use itertools::Itertools;
-use tracing::info;
 
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day12;
@@ -117,11 +116,13 @@ fn process(input: &mut [String]) -> i32 {
     total
 }
 
-impl DDay for Day12 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day12 {
+    fn run1(&self) -> Result<i64> {
         let res = process(&mut lines_from_file("./input/day12.txt")?);
-        info!("1st part: {}", res);
-        Ok(())
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
+        bail!("No part 2!");
     }
 }
 

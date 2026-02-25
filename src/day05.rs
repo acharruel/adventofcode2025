@@ -1,9 +1,9 @@
 use std::collections::BTreeSet;
 
 use anyhow::Result;
-use tracing::info;
+use tracing::debug;
 
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day05;
@@ -104,7 +104,7 @@ fn process(input: Vec<String>) -> i32 {
         }
     }
 
-    println!("total={}", total);
+    debug!("total={}", total);
     total
 }
 
@@ -123,17 +123,18 @@ fn process2(input: Vec<String>) -> u64 {
     }
 
     let total = check_fresh2(&set);
-    println!("process2 total={}", total);
+    debug!("process2 total={}", total);
     total
 }
 
-impl DDay for Day05 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day05 {
+    fn run1(&self) -> Result<i64> {
         let res = process(lines_from_file("./input/day05.txt")?);
-        info!("1st part: {}", res);
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process2(lines_from_file("./input/day05.txt")?);
-        info!("2nd part: {}", res);
-        Ok(())
+        Ok(res as i64)
     }
 }
 

@@ -1,7 +1,7 @@
 use anyhow::Result;
-use tracing::{debug, info};
+use tracing::debug;
 
-use crate::{DDay, single_line_from_file};
+use crate::{AocRun, single_line_from_file};
 
 fn is_invalid_part1(number: u64) -> bool {
     let len: u32 = ((number as f32).log10() + 1.0).floor() as u32 / 2;
@@ -81,13 +81,14 @@ fn process_part2(input: String) -> u64 {
 #[derive(Debug, Default)]
 pub struct Day02;
 
-impl DDay for Day02 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day02 {
+    fn run1(&self) -> Result<i64> {
         let res = process_part1(single_line_from_file("./input/day02.txt")?);
-        info!(?res, "1st part");
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process_part2(single_line_from_file("./input/day02.txt")?);
-        info!(?res, "2nd part");
-        Ok(())
+        Ok(res as i64)
     }
 }
 

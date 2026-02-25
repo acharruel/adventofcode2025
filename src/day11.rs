@@ -1,9 +1,9 @@
 use std::{collections::HashMap, vec};
 
 use anyhow::Result;
-use tracing::{debug, info};
+use tracing::debug;
 
-use crate::{DDay, lines_from_file};
+use crate::{AocRun, lines_from_file};
 
 #[derive(Debug, Default)]
 pub struct Day11;
@@ -87,13 +87,14 @@ fn process2(input: &mut [String]) -> i64 {
     a * b * c
 }
 
-impl DDay for Day11 {
-    fn run(&self) -> Result<()> {
+impl AocRun for Day11 {
+    fn run1(&self) -> Result<i64> {
         let res = process(&mut lines_from_file("./input/day11.txt")?);
-        info!("1st part: {}", res);
+        Ok(res as i64)
+    }
+    fn run2(&self) -> Result<i64> {
         let res = process2(&mut lines_from_file("./input/day11.txt")?);
-        info!("2nd part: {}", res);
-        Ok(())
+        Ok(res)
     }
 }
 
