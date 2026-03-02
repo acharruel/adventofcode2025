@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use anyhow::Result;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day05;
@@ -129,52 +129,40 @@ fn process2(input: Vec<String>) -> u64 {
 
 impl AocRun for Day05 {
     fn run1(&self) -> Result<i64> {
-        let res = process(lines_from_file("./input/day05.txt")?);
+        let res = process(load_input_file("./input/day05.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(lines_from_file("./input/day05.txt")?);
+        let res = process2(load_input_file("./input/day05.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day05::*;
+    use crate::{day05::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32
+"#;
 
     #[test_log::test]
     fn test1() {
-        let input = vec![
-            "3-5".to_string(),
-            "10-14".to_string(),
-            "16-20".to_string(),
-            "12-18".to_string(),
-            "".to_string(),
-            "1".to_string(),
-            "5".to_string(),
-            "8".to_string(),
-            "11".to_string(),
-            "17".to_string(),
-            "32".to_string(),
-        ];
-        assert!(process(input) == 3);
+        assert!(process(load_test_input(TEST_INPUT)) == 3);
     }
 
     #[test_log::test]
     fn test2() {
-        let input = vec![
-            "3-5".to_string(),
-            "10-14".to_string(),
-            "16-20".to_string(),
-            "12-18".to_string(),
-            "".to_string(),
-            "1".to_string(),
-            "5".to_string(),
-            "8".to_string(),
-            "11".to_string(),
-            "17".to_string(),
-            "32".to_string(),
-        ];
-        assert!(process2(input) == 14);
+        assert!(process2(load_test_input(TEST_INPUT)) == 14);
     }
 }

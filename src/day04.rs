@@ -2,7 +2,7 @@ use anyhow::Result;
 use itertools::Itertools;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day04;
@@ -98,11 +98,11 @@ fn iteration(input: &[String]) -> Vec<Position> {
 
 impl AocRun for Day04 {
     fn run1(&self) -> Result<i64> {
-        let res = iteration(&lines_from_file("./input/day04.txt")?).len();
+        let res = iteration(&load_input_file("./input/day04.txt")?).len();
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process(lines_from_file("./input/day04.txt")?);
+        let res = process(load_input_file("./input/day04.txt")?);
         Ok(res as i64)
     }
 }
@@ -137,39 +137,28 @@ fn process(input: Vec<String>) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use crate::day04::*;
+    use crate::{day04::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.
+"#;
 
     #[test_log::test]
     fn test1() {
-        let input = vec![
-            "..@@.@@@@.".to_string(),
-            "@@@.@.@.@@".to_string(),
-            "@@@@@.@.@@".to_string(),
-            "@.@@@@..@.".to_string(),
-            "@@.@@@@.@@".to_string(),
-            ".@@@@@@@.@".to_string(),
-            ".@.@.@.@@@".to_string(),
-            "@.@@@.@@@@".to_string(),
-            ".@@@@@@@@.".to_string(),
-            "@.@.@@@.@.".to_string(),
-        ];
-        assert!(iteration(&input).len() == 13);
+        assert!(iteration(&load_test_input(TEST_INPUT)).len() == 13);
     }
 
     #[test_log::test]
     fn test2() {
-        let input = vec![
-            "..@@.@@@@.".to_string(),
-            "@@@.@.@.@@".to_string(),
-            "@@@@@.@.@@".to_string(),
-            "@.@@@@..@.".to_string(),
-            "@@.@@@@.@@".to_string(),
-            ".@@@@@@@.@".to_string(),
-            ".@.@.@.@@@".to_string(),
-            "@.@@@.@@@@".to_string(),
-            ".@@@@@@@@.".to_string(),
-            "@.@.@@@.@.".to_string(),
-        ];
-        assert!(process(input) == 43);
+        assert!(process(load_test_input(TEST_INPUT)) == 43);
     }
 }

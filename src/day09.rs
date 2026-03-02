@@ -4,7 +4,7 @@ use anyhow::Result;
 use itertools::Itertools;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day09;
@@ -87,68 +87,58 @@ fn process2(input: &mut Vec<String>) -> i64 {
 
 impl AocRun for Day09 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day09.txt")?);
+        let res = process(&mut load_input_file("./input/day09.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day09.txt")?);
+        let res = process2(&mut load_input_file("./input/day09.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day09::*;
+    use crate::{day09::*, tests::load_test_input};
+
+    //   0 1 2 3 4 5 6 7 8 9 0 1 2 3
+    // 0 . . . . . . . . . . . . . .
+    // 1 . . . . . . . # . . . # . .
+    // 2 . . . . . . . . . . . . . .
+    // 3 . . # . . . . # . . . . . .
+    // 4 . . . . . . . . . . . . . .
+    // 5 . . # . . . . . . # . . . .
+    // 6 . . . . . . . . . . . . . .
+    // 7 . . . . . . . . . # . # . .
+    // 8 . . . . . . . . . . . . . .
+    //
+    //   0 1 2 3 4 5 6 7 8 9 0 1 2 3
+    // 0 . . . . . . . . . . . . . .
+    // 1 . . . . . . . # X X X # . .
+    // 2 . . . . . . . X . . . X . .
+    // 3 . . # X X X X # . . . X . .
+    // 4 . . X . . . . . . . . X . .
+    // 5 . . # X X X X X X # . X . .
+    // 6 . . . . . . . . . X . X . .
+    // 7 . . . . . . . . . # X # . .
+    // 8 . . . . . . . . . . . . . .
+    static TEST_INPUT: &str = r#"
+7,1
+11,1
+11,7
+9,7
+9,5
+2,5
+2,3
+7,3
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "7,1".to_string(),
-            "11,1".to_string(),
-            "11,7".to_string(),
-            "9,7".to_string(),
-            "9,5".to_string(),
-            "2,5".to_string(),
-            "2,3".to_string(),
-            "7,3".to_string(),
-        ];
-        assert!(process(&mut input) == 50);
+        assert!(process(&mut load_test_input(TEST_INPUT)) == 50);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            "7,1".to_string(),
-            "11,1".to_string(),
-            "11,7".to_string(),
-            "9,7".to_string(),
-            "9,5".to_string(),
-            "2,5".to_string(),
-            "2,3".to_string(),
-            "7,3".to_string(),
-        ];
-        assert!(process2(&mut input) == 24);
+        assert!(process2(&mut load_test_input(TEST_INPUT)) == 24);
     }
 }
-
-//   0 1 2 3 4 5 6 7 8 9 0 1 2 3
-// 0 . . . . . . . . . . . . . .
-// 1 . . . . . . . # . . . # . .
-// 2 . . . . . . . . . . . . . .
-// 3 . . # . . . . # . . . . . .
-// 4 . . . . . . . . . . . . . .
-// 5 . . # . . . . . . # . . . .
-// 6 . . . . . . . . . . . . . .
-// 7 . . . . . . . . . # . # . .
-// 8 . . . . . . . . . . . . . .
-//
-//   0 1 2 3 4 5 6 7 8 9 0 1 2 3
-// 0 . . . . . . . . . . . . . .
-// 1 . . . . . . . # X X X # . .
-// 2 . . . . . . . X . . . X . .
-// 3 . . # X X X X # . . . X . .
-// 4 . . X . . . . . . . . X . .
-// 5 . . # X X X X X X # . X . .
-// 6 . . . . . . . . . X . X . .
-// 7 . . . . . . . . . # X # . .
-// 8 . . . . . . . . . . . . . .

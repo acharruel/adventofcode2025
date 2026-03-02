@@ -125,7 +125,7 @@ pub fn run(day: u8) -> Result<()> {
     Ok(())
 }
 
-pub fn lines_from_file(filename: impl AsRef<Path>) -> Result<Vec<String>> {
+pub fn load_input_file(filename: impl AsRef<Path>) -> Result<Vec<String>> {
     Ok(read_lines(filename)?
         .map(|l| l.expect("Failed to parse line"))
         .collect())
@@ -141,4 +141,21 @@ where
 {
     let file = File::open(filename)?;
     Ok(BufReader::new(file).lines())
+}
+
+#[cfg(test)]
+mod tests {
+    pub fn load_test_input(input: &str) -> Vec<String> {
+        let pouet = input
+            .lines()
+            .skip_while(|&l| l.is_empty())
+            .map(|l| l.to_string())
+            .collect();
+        println!("{:?}", pouet);
+        pouet
+    }
+
+    pub fn load_test_input_single_line(input: &str) -> String {
+        input.lines().map(|l| l.to_string()).next().unwrap()
+    }
 }

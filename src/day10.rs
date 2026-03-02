@@ -4,7 +4,7 @@ use anyhow::Result;
 use itertools::Itertools;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day10;
@@ -164,36 +164,32 @@ fn process2(input: &mut [String]) -> i32 {
 
 impl AocRun for Day10 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day10.txt")?);
+        let res = process(&mut load_input_file("./input/day10.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day10.txt")?);
+        let res = process2(&mut load_input_file("./input/day10.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day10::*;
+    use crate::{day10::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
+[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}".to_string(),
-            "[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}".to_string(),
-            "[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}".to_string(),
-        ];
-        assert!(process(&mut input) == 7);
+        assert!(process(&mut load_test_input(TEST_INPUT)) == 7);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            "[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}".to_string(),
-            "[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}".to_string(),
-            "[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}".to_string(),
-        ];
-        assert!(process2(&mut input) == 33);
+        assert!(process2(&mut load_test_input(TEST_INPUT)) == 33);
     }
 }

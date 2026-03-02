@@ -3,7 +3,7 @@ use std::collections::{BTreeSet, HashMap};
 use anyhow::Result;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day07;
@@ -90,62 +90,45 @@ fn process2(input: &mut Vec<String>) -> u64 {
 
 impl AocRun for Day07 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day07.txt")?);
+        let res = process(&mut load_input_file("./input/day07.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day07.txt")?);
+        let res = process2(&mut load_input_file("./input/day07.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day07::*;
+    use crate::{day07::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+.......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+...............
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            ".......S.......".to_string(), //0
-            "...............".to_string(), //1
-            ".......^.......".to_string(), //2
-            "...............".to_string(), //3
-            "......^.^......".to_string(), //4
-            "...............".to_string(), //5
-            ".....^.^.^.....".to_string(), //6
-            "...............".to_string(), //7
-            "....^.^...^....".to_string(), //8
-            "...............".to_string(), //9
-            "...^.^...^.^...".to_string(), //10
-            "...............".to_string(), //11
-            "..^...^.....^..".to_string(), //12
-            "...............".to_string(), //13
-            ".^.^.^.^.^...^.".to_string(), //14
-            "...............".to_string(), //15
-        ];
-        assert!(process(&mut input) == 21);
+        assert!(process(&mut load_test_input(TEST_INPUT)) == 21);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            ".......S.......".to_string(),
-            "...............".to_string(),
-            ".......^.......".to_string(),
-            "...............".to_string(),
-            "......^.^......".to_string(),
-            "...............".to_string(),
-            ".....^.^.^.....".to_string(),
-            "...............".to_string(),
-            "....^.^...^....".to_string(),
-            "...............".to_string(),
-            "...^.^...^.^...".to_string(),
-            "...............".to_string(),
-            "..^...^.....^..".to_string(),
-            "...............".to_string(),
-            ".^.^.^.^.^...^.".to_string(),
-            "...............".to_string(),
-        ];
-        assert!(process2(&mut input) == 40);
+        assert!(process2(&mut load_test_input(TEST_INPUT)) == 40);
     }
 }

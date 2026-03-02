@@ -94,17 +94,17 @@ impl AocRun for Day02 {
 
 #[cfg(test)]
 mod tests {
-    use crate::day02::*;
+    use crate::{day02::*, tests::load_test_input_single_line};
+
+    static TEST_INPUT: &str = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124";
 
     #[test_log::test]
     fn test1() {
-        let input = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124".to_string();
-        assert!(process_part1(input) == 1227775554);
+        assert!(process_part1(load_test_input_single_line(TEST_INPUT)) == 1227775554);
     }
 
     #[test_log::test]
     fn test2() {
-        let input = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124".to_string();
-        assert!(process_part2(input) == 4174379265);
+        assert!(process_part2(load_test_input_single_line(TEST_INPUT)) == 4174379265);
     }
 }

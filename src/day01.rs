@@ -1,7 +1,7 @@
 use anyhow::Result;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 fn process(input: Vec<String>) -> i32 {
     let mut pos = 50;
@@ -66,51 +66,40 @@ pub struct Day01;
 
 impl AocRun for Day01 {
     fn run1(&self) -> Result<i64> {
-        let res = process(lines_from_file("./input/day01.txt")?);
+        let res = process(load_input_file("./input/day01.txt")?);
         Ok(res as i64)
     }
 
     fn run2(&self) -> Result<i64> {
-        let res = process2(lines_from_file("./input/day01.txt")?);
+        let res = process2(load_input_file("./input/day01.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day01::*;
+    use crate::{day01::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82
+"#;
 
     #[test_log::test]
     fn test1() {
-        let input = vec![
-            "L68".to_string(),
-            "L30".to_string(),
-            "R48".to_string(),
-            "L5".to_string(),
-            "R60".to_string(),
-            "L55".to_string(),
-            "L1".to_string(),
-            "L99".to_string(),
-            "R14".to_string(),
-            "L82".to_string(),
-        ];
-        assert!(process(input) == 3);
+        assert!(process(load_test_input(TEST_INPUT)) == 3);
     }
 
     #[test_log::test]
     fn test2() {
-        let input = vec![
-            "L68".to_string(),
-            "L30".to_string(),
-            "R48".to_string(),
-            "L5".to_string(),
-            "R60".to_string(),
-            "L55".to_string(),
-            "L1".to_string(),
-            "L99".to_string(),
-            "R14".to_string(),
-            "L82".to_string(),
-        ];
-        assert!(process2(input) == 6);
+        assert!(process2(load_test_input(TEST_INPUT)) == 6);
     }
 }

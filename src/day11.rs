@@ -3,7 +3,7 @@ use std::{collections::HashMap, vec};
 use anyhow::Result;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day11;
@@ -89,53 +89,53 @@ fn process2(input: &mut [String]) -> i64 {
 
 impl AocRun for Day11 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day11.txt")?);
+        let res = process(&mut load_input_file("./input/day11.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day11.txt")?);
+        let res = process2(&mut load_input_file("./input/day11.txt")?);
         Ok(res)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day11::*;
+    use crate::{day11::*, tests::load_test_input};
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "aaa: you hhh".to_string(),
-            "you: bbb ccc".to_string(),
-            "bbb: ddd eee".to_string(),
-            "ccc: ddd eee fff".to_string(),
-            "ddd: ggg".to_string(),
-            "eee: out".to_string(),
-            "fff: out".to_string(),
-            "ggg: out".to_string(),
-            "hhh: ccc fff iii".to_string(),
-            "iii: out".to_string(),
-        ];
-        assert!(process(&mut input) == 5);
+        let input = r#"
+aaa: you hhh
+you: bbb ccc
+bbb: ddd eee
+ccc: ddd eee fff
+ddd: ggg
+eee: out
+fff: out
+ggg: out
+hhh: ccc fff iii
+iii: out
+"#;
+        assert!(process(&mut load_test_input(input)) == 5);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            "svr: aaa bbb".to_string(),
-            "aaa: fft".to_string(),
-            "fft: ccc".to_string(),
-            "bbb: tty".to_string(),
-            "tty: ccc".to_string(),
-            "ccc: ddd eee".to_string(),
-            "ddd: hub".to_string(),
-            "hub: fff".to_string(),
-            "eee: dac".to_string(),
-            "dac: fff".to_string(),
-            "fff: ggg hhh".to_string(),
-            "ggg: out".to_string(),
-            "hhh: out".to_string(),
-        ];
-        assert!(process2(&mut input) == 2);
+        let input = r#"
+svr: aaa bbb
+aaa: fft
+fft: ccc
+bbb: tty
+tty: ccc
+ccc: ddd eee
+ddd: hub
+hub: fff
+eee: dac
+dac: fff
+fff: ggg hhh
+ggg: out
+hhh: out
+"#;
+        assert!(process2(&mut load_test_input(input)) == 2);
     }
 }

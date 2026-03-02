@@ -2,7 +2,7 @@ use anyhow::Result;
 use tracing::debug;
 
 use crate::utils::dsu::Dsu;
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day08;
@@ -115,70 +115,49 @@ fn process2(input: &mut [String]) -> i64 {
 
 impl AocRun for Day08 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day08.txt")?, 1000);
+        let res = process(&mut load_input_file("./input/day08.txt")?, 1000);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day08.txt")?);
+        let res = process2(&mut load_input_file("./input/day08.txt")?);
         Ok(res)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day08::*;
+    use crate::{day08::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+162,817,812
+57,618,57
+906,360,560
+592,479,940
+352,342,300
+466,668,158
+542,29,236
+431,825,988
+739,650,466
+52,470,668
+216,146,977
+819,987,18
+117,168,530
+805,96,715
+346,949,466
+970,615,88
+941,993,340
+862,61,35
+984,92,344
+425,690,689
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "162,817,812".to_string(),
-            "57,618,57".to_string(),
-            "906,360,560".to_string(),
-            "592,479,940".to_string(),
-            "352,342,300".to_string(),
-            "466,668,158".to_string(),
-            "542,29,236".to_string(),
-            "431,825,988".to_string(),
-            "739,650,466".to_string(),
-            "52,470,668".to_string(),
-            "216,146,977".to_string(),
-            "819,987,18".to_string(),
-            "117,168,530".to_string(),
-            "805,96,715".to_string(),
-            "346,949,466".to_string(),
-            "970,615,88".to_string(),
-            "941,993,340".to_string(),
-            "862,61,35".to_string(),
-            "984,92,344".to_string(),
-            "425,690,689".to_string(),
-        ];
-        assert!(process(&mut input, 10) == 40);
+        assert!(process(&mut load_test_input(TEST_INPUT), 10) == 40);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            "162,817,812".to_string(),
-            "57,618,57".to_string(),
-            "906,360,560".to_string(),
-            "592,479,940".to_string(),
-            "352,342,300".to_string(),
-            "466,668,158".to_string(),
-            "542,29,236".to_string(),
-            "431,825,988".to_string(),
-            "739,650,466".to_string(),
-            "52,470,668".to_string(),
-            "216,146,977".to_string(),
-            "819,987,18".to_string(),
-            "117,168,530".to_string(),
-            "805,96,715".to_string(),
-            "346,949,466".to_string(),
-            "970,615,88".to_string(),
-            "941,993,340".to_string(),
-            "862,61,35".to_string(),
-            "984,92,344".to_string(),
-            "425,690,689".to_string(),
-        ];
-        assert!(process2(&mut input) == 25272);
+        assert!(process2(&mut load_test_input(TEST_INPUT)) == 25272);
     }
 }

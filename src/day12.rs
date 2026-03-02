@@ -3,7 +3,7 @@ use std::vec;
 use anyhow::{Result, bail};
 use itertools::Itertools;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day12;
@@ -118,7 +118,7 @@ fn process(input: &mut [String]) -> i32 {
 
 impl AocRun for Day12 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day12.txt")?);
+        let res = process(&mut load_input_file("./input/day12.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
@@ -128,45 +128,46 @@ impl AocRun for Day12 {
 
 #[cfg(test)]
 mod tests {
-    use crate::day12::*;
+    use crate::{day12::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+0:
+###
+##.
+##.
+
+1:
+###
+##.
+.##
+
+2:
+.##
+###
+##.
+
+3:
+##.
+###
+##.
+
+4:
+###
+#..
+###
+
+5:
+###
+.#.
+###
+
+4x4: 0 0 0 0 2 0
+12x5: 1 0 1 0 2 2
+12x5: 1 0 1 0 3 2
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "0:".to_string(),
-            "###".to_string(),
-            "##.".to_string(),
-            "##.".to_string(),
-            "".to_string(),
-            "1:".to_string(),
-            "###".to_string(),
-            "##.".to_string(),
-            ".##".to_string(),
-            "".to_string(),
-            "2:".to_string(),
-            ".##".to_string(),
-            "###".to_string(),
-            "##.".to_string(),
-            "".to_string(),
-            "3:".to_string(),
-            "##.".to_string(),
-            "###".to_string(),
-            "##.".to_string(),
-            "".to_string(),
-            "4:".to_string(),
-            "###".to_string(),
-            "#..".to_string(),
-            "###".to_string(),
-            "".to_string(),
-            "5:".to_string(),
-            "###".to_string(),
-            ".#.".to_string(),
-            "###".to_string(),
-            "".to_string(),
-            "4x4: 0 0 0 0 2 0".to_string(),
-            "12x5: 1 0 1 0 2 2".to_string(),
-            "12x5: 1 0 1 0 3 2".to_string(),
-        ];
-        assert!(process(&mut input) == 2);
+        assert!(process(&mut load_test_input(TEST_INPUT)) == 2);
     }
 }

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use tracing::debug;
 
-use crate::{AocRun, lines_from_file};
+use crate::{AocRun, load_input_file};
 
 #[derive(Debug, Default)]
 pub struct Day06;
@@ -120,38 +120,33 @@ fn process2(input: &mut [String]) -> u64 {
 
 impl AocRun for Day06 {
     fn run1(&self) -> Result<i64> {
-        let res = process(&mut lines_from_file("./input/day06.txt")?);
+        let res = process(&mut load_input_file("./input/day06.txt")?);
         Ok(res as i64)
     }
     fn run2(&self) -> Result<i64> {
-        let res = process2(&mut lines_from_file("./input/day06.txt")?);
+        let res = process2(&mut load_input_file("./input/day06.txt")?);
         Ok(res as i64)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::day06::*;
+    use crate::{day06::*, tests::load_test_input};
+
+    static TEST_INPUT: &str = r#"
+123 328  51 64 
+ 45 64  387 23 
+  6 98  215 314
+*   +   *   +  
+"#;
 
     #[test_log::test]
     fn test1() {
-        let mut input = vec![
-            "123 328  51 64".to_string(),
-            " 45 64  387 23".to_string(),
-            "  6 98  215 314".to_string(),
-            "*   +   *   +  ".to_string(),
-        ];
-        assert!(process(&mut input) == 4277556);
+        assert!(process(&mut load_test_input(TEST_INPUT)) == 4277556);
     }
 
     #[test_log::test]
     fn test2() {
-        let mut input = vec![
-            "123 328  51 64 ".to_string(),
-            " 45 64  387 23 ".to_string(),
-            "  6 98  215 314".to_string(),
-            "*   +   *   +  ".to_string(),
-        ];
-        assert!(process2(&mut input) == 3263827);
+        assert!(process2(&mut load_test_input(TEST_INPUT)) == 3263827);
     }
 }
